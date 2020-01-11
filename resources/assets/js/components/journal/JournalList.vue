@@ -45,7 +45,7 @@
 
     <!-- Right sidebar -->
     <div :class="[ dirltr ? 'fl' : 'fr' ]" class="w-30 pa2">
-      <a href="journal/add" class="btn btn-primary w-100 mb4" cy-name="add-entry-button">
+      <a href="journal/add" class="btn btn-primary mb4" cy-name="add-entry-button">
         {{ $t('journal.journal_add') }}
       </a>
       <p>{{ $t('journal.journal_description') }}</p>
