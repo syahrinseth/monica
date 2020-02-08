@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Services\Contact\Conversation;
 
-use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\Contact\Call;
 use App\Models\Account\Account;
@@ -18,7 +17,8 @@ class UpdateCallTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function test_it_updates_a_call()
+    /** @test */
+    public function it_updates_a_call()
     {
         $contact = factory(Contact::class)->create([]);
         $call = factory(Call::class)->create([
@@ -29,7 +29,7 @@ class UpdateCallTest extends TestCase
         $request = [
             'account_id' => $call->account->id,
             'call_id' => $call->id,
-            'called_at' => Carbon::now(),
+            'called_at' => now(),
             'content' => 'this is the content',
         ];
 
@@ -48,7 +48,8 @@ class UpdateCallTest extends TestCase
         );
     }
 
-    public function test_it_updates_a_call_and_who_called_info()
+    /** @test */
+    public function it_updates_a_call_and_who_called_info()
     {
         $contact = factory(Contact::class)->create([]);
         $call = factory(Call::class)->create([
@@ -60,7 +61,7 @@ class UpdateCallTest extends TestCase
         $request = [
             'account_id' => $call->account->id,
             'call_id' => $call->id,
-            'called_at' => Carbon::now(),
+            'called_at' => now(),
             'content' => 'this is the content',
             'contact_called' => 1,
         ];
@@ -76,7 +77,8 @@ class UpdateCallTest extends TestCase
         ]);
     }
 
-    public function test_it_updates_a_call_without_the_content()
+    /** @test */
+    public function it_updates_a_call_without_the_content()
     {
         $contact = factory(Contact::class)->create([]);
         $call = factory(Call::class)->create([
@@ -87,7 +89,7 @@ class UpdateCallTest extends TestCase
         $request = [
             'account_id' => $call->account->id,
             'call_id' => $call->id,
-            'called_at' => Carbon::now(),
+            'called_at' => now(),
         ];
 
         $call = app(UpdateCall::class)->execute($request);
@@ -103,7 +105,9 @@ class UpdateCallTest extends TestCase
     /**
      * Checks that it adds new emotions.
      */
-    public function test_it_updates_emotions()
+
+    /** @test */
+    public function it_updates_emotions()
     {
         $contact = factory(Contact::class)->create([]);
         $call = factory(Call::class)->create([
@@ -126,7 +130,7 @@ class UpdateCallTest extends TestCase
         $request = [
             'account_id' => $call->account->id,
             'call_id' => $call->id,
-            'called_at' => Carbon::now(),
+            'called_at' => now(),
             'content' => 'this is the content',
             'contact_called' => 1,
             'emotions' => $emotionArray,
@@ -152,7 +156,9 @@ class UpdateCallTest extends TestCase
     /**
      * Checks that it removes old emotion and add new emotions.
      */
-    public function test_it_deletes_and_updates_emotions()
+
+    /** @test */
+    public function it_deletes_and_updates_emotions()
     {
         $contact = factory(Contact::class)->create([]);
         $call = factory(Call::class)->create([
@@ -184,7 +190,7 @@ class UpdateCallTest extends TestCase
         $request = [
             'account_id' => $call->account->id,
             'call_id' => $call->id,
-            'called_at' => Carbon::now(),
+            'called_at' => now(),
             'content' => 'this is the content',
             'contact_called' => 1,
             'emotions' => $emotionArray,
@@ -221,7 +227,8 @@ class UpdateCallTest extends TestCase
         ]);
     }
 
-    public function test_it_updates_the_last_call_info()
+    /** @test */
+    public function it_updates_the_last_call_info()
     {
         $contact = factory(Contact::class)->create([
             'last_talked_to' => '1900-01-01 00:00:00',
@@ -231,12 +238,12 @@ class UpdateCallTest extends TestCase
             'account_id' => $contact->account->id,
         ]);
 
-        $date = Carbon::now();
+        $date = now();
 
         $request = [
             'account_id' => $call->account->id,
             'call_id' => $call->id,
-            'called_at' => Carbon::now(),
+            'called_at' => now(),
         ];
 
         app(UpdateCall::class)->execute($request);
@@ -247,7 +254,8 @@ class UpdateCallTest extends TestCase
         ]);
     }
 
-    public function test_it_doesnt_update_the_last_call_info()
+    /** @test */
+    public function it_doesnt_update_the_last_call_info()
     {
         $contact = factory(Contact::class)->create([
             'last_talked_to' => '2200-01-01 00:00:00',
@@ -257,12 +265,12 @@ class UpdateCallTest extends TestCase
             'account_id' => $contact->account->id,
         ]);
 
-        $date = Carbon::now();
+        $date = now();
 
         $request = [
             'account_id' => $call->account->id,
             'call_id' => $call->id,
-            'called_at' => Carbon::now(),
+            'called_at' => now(),
         ];
 
         app(UpdateCall::class)->execute($request);
@@ -273,20 +281,22 @@ class UpdateCallTest extends TestCase
         ]);
     }
 
-    public function test_it_fails_if_wrong_parameters_are_given()
+    /** @test */
+    public function it_fails_if_wrong_parameters_are_given()
     {
         $contact = factory(Contact::class)->create([]);
 
         $request = [
             'contact_id' => $contact->id,
-            'called_at' => Carbon::now(),
+            'called_at' => now(),
         ];
 
         $this->expectException(ValidationException::class);
         app(UpdateCall::class)->execute($request);
     }
 
-    public function test_it_throws_an_exception_if_call_is_not_linked_to_account()
+    /** @test */
+    public function it_throws_an_exception_if_call_is_not_linked_to_account()
     {
         $account = factory(Account::class)->create();
         $call = factory(Call::class)->create();
@@ -294,7 +304,7 @@ class UpdateCallTest extends TestCase
         $request = [
             'account_id' => $account->id,
             'call_id' => $call->id,
-            'called_at' => Carbon::now(),
+            'called_at' => now(),
         ];
 
         $this->expectException(ModelNotFoundException::class);

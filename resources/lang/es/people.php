@@ -3,6 +3,7 @@
 return [
 
     //index
+    'people_not_found' => 'Contacto no encontrado',
     'people_list_number_kids' => '1 niño|:count niños',
     'people_list_last_updated' => 'Última consulta:',
     'people_list_number_reminders' => '1 recordatorio|:count recordatorios',
@@ -22,7 +23,14 @@ return [
     'people_list_show_dead' => 'Mostrar fallecidos (:count)',
     'people_list_hide_dead' => 'Ocultar fallecidos (:count)',
     'people_search' => 'Buscar en tus contactos...',
-    'people_search_no_results' => 'Ningun contacto pertinente encontrado :(',
+    'people_search_no_results' => 'No results found',
+    'people_search_next' => 'Next',
+    'people_search_prev' => 'Prev',
+    'people_search_rows_per_page' => 'Rows per page:',
+    'people_search_of' => 'of',
+    'people_search_page' => 'Page',
+    'people_search_all' => 'All',
+    'people_add_new' => 'Añadir a una nueva persona',
     'people_list_account_usage' => 'Es uso de tu cuenta: :current/:limit contactos',
     'people_list_account_upgrade_title' => 'Actualiza tu cuenta para desbloquear todo su potencial.',
     'people_list_account_upgrade_cta' => 'Actualizar ahora',
@@ -62,6 +70,7 @@ return [
     'list_link_to_archived_contacts' => 'Lista de contactos archivados',
 
     // Header
+    'me' => 'This is you',
     'edit_contact_information' => 'Editar información de contacto',
     'contact_archive' => 'Archivar contacto',
     'contact_unarchive' => 'Des-archivar contacto',
@@ -76,7 +85,7 @@ return [
     'stay_in_touch_premium' => 'Necesitas actualizar tu cuenta para hacer uso de esta característica',
     'stay_in_touch_modal_title' => 'Mantenerse en contacto',
     'stay_in_touch_modal_desc' => 'Podemos recordarte que te mantengas en contacto con {firstname} regularmente por correo electrónico.',
-    'stay_in_touch_modal_label' => 'Envíame un correo electrónico cada...',
+    'stay_in_touch_modal_label' => 'Send me an email every... {count} day|Send me an email every... {count} days',
 
     // Calls
     'modal_call_title' => 'Registrar una llamada',
@@ -111,6 +120,7 @@ return [
     'conversation_add_content' => 'Escribe lo que se dijo',
     'conversation_add_what_was_said' => '¿Qué fue lo que dijiste?',
     'conversation_add_another' => 'Añade otro mensaje',
+    'conversation_add_error' => 'You must add at least one message.',
     'conversation_list_table_messages' => 'Mensajes',
     'conversation_list_table_content' => 'Contenido parcial (último mensaje)',
     'conversation_list_title' => 'Conversaciones',
@@ -131,8 +141,8 @@ return [
     // additional information
     'information_edit_success' => 'El perfil ha sido actualizado exitosamente',
     'information_edit_title' => 'Editar la información personal de :name',
-    'information_edit_avatar' => 'Foto/avatar del contacto',
     'information_edit_max_size' => 'Máximo :size Kb.',
+    'information_edit_max_size2' => 'Max {size} Kb.',
     'information_edit_firstname' => 'Nombre',
     'information_edit_lastname' => 'Apellido (Opcional)',
     'information_edit_description' => 'Descripción (opcional)',
@@ -150,14 +160,14 @@ return [
     'work_edit_company' => 'Empresa (opcional)',
     'work_information' => 'Información de trabajo',
 
-    // food preferencies
-    'food_preferencies_add_success' => 'Las preferencias de comida han sido guardadas',
-    'food_preferencies_edit_description' => 'Tal vez :firstname o alguien en la familia :family tiene una alergia. O no le gusta una botella específica de vino. Indica eso aquí, así lo recordaras la próxima vez que los invites a cenar',
-    'food_preferencies_edit_description_no_last_name' => 'Tal vez :firstname tiene una alergia. O no le gusta una botella específica de vino. Indica eso aquí, así lo recordaras la próxima vez que lo invites a cenar',
-    'food_preferencies_edit_title' => 'Indica preferencias en comida',
-    'food_preferencies_edit_cta' => 'Guardar preferencias en comida',
-    'food_preferencies_title' => 'Preferencias de comida',
-    'food_preferencies_cta' => 'Añadir preferencias en comida',
+    // food preferences
+    'food_preferences_add_success' => 'Las preferencias de comida han sido guardadas',
+    'food_preferences_edit_description' => 'Tal vez :firstname o alguien en la familia :family tiene una alergia. O no le gusta una botella específica de vino. Indica eso aquí, así lo recordaras la próxima vez que los invites a cenar',
+    'food_preferences_edit_description_no_last_name' => 'Tal vez :firstname tiene una alergia. O no le gusta una botella específica de vino. Indica eso aquí, así lo recordaras la próxima vez que lo invites a cenar',
+    'food_preferences_edit_title' => 'Indica preferencias en comida',
+    'food_preferences_edit_cta' => 'Guardar preferencias en comida',
+    'food_preferences_title' => 'Preferencias de comida',
+    'food_preferences_cta' => 'Añadir preferencias en comida',
 
     // reminders
     'reminders_blank_title' => '¿Hay algo en lo que quisieras ser recordado sobre :name?',
@@ -174,6 +184,7 @@ return [
     'reminders_create_success' => 'El recordatorio ha sido añadido exitosamente',
     'reminders_delete_success' => 'El recordatorio ha sido eliminado exitosamente',
     'reminders_update_success' => 'El recordatorio ha sido actualizado exitosamente',
+    'reminders_add_optional_comment' => 'Optional comment',
 
     'reminder_frequency_day' => 'cada día|cada :number días',
     'reminder_frequency_week' => 'cada semana|cada :number semanas',
@@ -196,6 +207,7 @@ return [
     'relationship_form_add' => 'Añadir una nueva relación',
     'relationship_form_edit' => 'Editar una relación existente',
     'relationship_form_is_with' => 'Esta persona es...',
+    'relationship_form_is_with_name' => ':name is...',
     'relationship_form_add_choice' => '¿Con quién es esta relación?',
     'relationship_form_create_contact' => 'Añade a una nueva persona',
     'relationship_form_associate_contact' => 'Un contacto existente',
@@ -210,6 +222,7 @@ return [
     'relationship_form_deletion_success' => 'La relación ha sido eliminada.',
 
     // tasks
+    'tasks_title' => 'Tasks',
     'tasks_blank_title' => 'Aún no tienes tareas.',
     'tasks_form_title' => 'Título',
     'tasks_form_description' => 'Descripción (opcional)',
@@ -230,24 +243,25 @@ return [
     'activity_type_ate_at_his_place' => 'comimos en su casa',
     'activity_type_went_bar' => 'fuimos al bar',
     'activity_type_ate_at_home' => 'comimos en casa',
-    'activity_type_picknicked' => 'fuimos de picknick',
+    'activity_type_picnicked' => 'picnicked',
     'activity_type_ate_restaurant' => 'comimos en un restaurante',
     'activity_type_went_theater' => 'fuimos al teatro',
     'activity_type_went_concert' => 'fuimos a un concierto',
     'activity_type_went_play' => 'fuimos a jugar',
     'activity_type_went_museum' => 'fuimos al museo',
     'activities_add_activity' => 'Añadir actividad',
-    'activities_more_details' => 'Más detalles',
-    'activities_hide_details' => 'Ocultar detalles',
-    'activities_delete_confirmation' => '¿Está seguro que desea eliminar esta actividad?',
+    'activities_add_more_details' => 'Add more details',
+    'activities_add_emotions' => 'Add emotions',
+    'activities_add_category' => 'Indicate a category',
+    'activities_add_participants_cta' => 'Add participants',
     'activities_item_information' => ':Activity. Sucedió el :date',
-    'activities_add_title' => '¿Qué hiciste con :name?',
+    'activities_add_title' => '¿Qué hiciste con {name}?',
     'activities_summary' => 'Describe lo que hiciste',
     'activities_add_pick_activity' => '(Opcional) ¿Te gustaría categorizar esta actividad? No tienes que hacerlo, pero esto te dará estadísticas en el futuro',
-    'activities_add_date_occured' => 'Fecha en que esta actividad ocurrió',
-    'activities_add_optional_comment' => 'Comentario opcional',
-    'activities_add_cta' => 'Registra actividad',
-    'activities_blank_title' => 'Dale seguimiento a lo que has hecho con :name en el pasado, y de que han hablado',
+    'activities_add_date_occured' => 'The activity happened on...',
+    'activities_add_participants' => 'Who, apart from {name}, participated in this activity? (optional)',
+    'activities_add_emotions_title' => 'Do you want to log how you felt during this activity? (optional)',
+    'activities_blank_title' => 'Dale seguimiento a lo que has hecho con {name} en el pasado, y de que han hablado',
     'activities_blank_add_activity' => 'Añadir una actividad',
     'activities_add_success' => 'La actividad ha sido añadida exitosamente',
     'activities_add_error' => 'Ocurrió un error al añadir la actividad',
@@ -261,6 +275,10 @@ return [
     'activities_profile_year_summary_activity_types' => 'Aquí tienes un desglose del tipo de actvidades que han tenido juntos en :year',
     'activities_profile_year_summary' => 'Aquí tienes lo que han hecho en :year',
     'activities_profile_number_occurences' => ':value actividad|:value actividades',
+    'activities_list_participants' => 'Participants:',
+    'activities_list_emotions' => 'Emotions felt:',
+    'activities_list_date' => 'Happened on',
+    'activities_list_category' => 'Category:',
 
     // notes
     'notes_create_success' => 'La nota ha sido creada exitosamente',
@@ -367,7 +385,7 @@ return [
     // Pets
     'pets_kind' => 'Tipo de mascota',
     'pets_name' => 'Nombre (opcional)',
-    'pets_create_success' => 'La mascota ha sido añadida exitosamente',
+    'pets_create_success' => 'The pet has been successfully added',
     'pets_update_success' => 'La mascota ha sido actualizada',
     'pets_delete_success' => 'La mascota ha sido eliminada',
     'pets_title' => 'Mascotas',
@@ -423,8 +441,8 @@ return [
     'life_event_sentence_home_improvement' => 'Hizo unas mejoras en el hogar',
     'life_event_sentence_holidays' => 'Se fue de vacaciones',
     'life_event_sentence_new_vehicle' => 'Consiguió un vehículo nuevo',
-    'life_event_sentence_new_roommate' => 'Tuvo un compañero de habitación',
-    'life_event_sentence_overcame_an_illness' => 'Superó una enfermedad',
+    'life_event_sentence_new_roommate' => 'Got a roommate',
+    'life_event_sentence_overcame_an_illness' => 'Overcame an illness',
     'life_event_sentence_quit_a_habit' => 'Dejó un vicio',
     'life_event_sentence_new_eating_habits' => 'Empezó nuevos hábitos alimenticios',
     'life_event_sentence_weight_loss' => 'Perdió peso',
@@ -454,11 +472,23 @@ return [
     'document_upload_zone_error' => 'Se produjo un error al subir el archivo. Por favor inténtelo de nuevo.',
 
     // Photos
+    'photo_title' => 'Photos',
     'photo_list_title' => 'Fotos relacionadas',
     'photo_list_cta' => 'Subir foto',
     'photo_list_blank_desc' => 'Puede almacenar imágenes acerca de este contacto. ¡Suba una ahora!',
     'photo_upload_zone_cta' => 'Carga una foto',
+    'photo_current_profile_pic' => 'Foto de perfil actual',
+    'photo_make_profile_pic' => 'Make profile picture',
     'photo_delete' => 'Eliminar foto',
+
+    // Avatars
+    'avatar_change_title' => 'Change your avatar',
+    'avatar_question' => 'Which avatar would you like to use?',
+    'avatar_default_avatar' => 'The default avatar',
+    'avatar_adorable_avatar' => 'The Adorable avatar',
+    'avatar_gravatar' => 'The Gravatar associated with the email address of this person. <a href="https://gravatar.com/">Gravatar</a> is a global system that lets users associate email addresses with photos.',
+    'avatar_current' => 'Keep the current avatar',
+    'avatar_photo' => 'From a photo that you upload',
 
     // emotions
     'emotion_this_made_me_feel' => 'Esto te hizo sentir…',

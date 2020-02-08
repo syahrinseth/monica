@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Services\Contact\Conversation;
 
-use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\Account\Account;
 use App\Models\Contact\Contact;
@@ -17,11 +16,12 @@ class AddMessageToConversationTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function test_it_fails_if_wrong_parameters_are_given()
+    /** @test */
+    public function it_fails_if_wrong_parameters_are_given()
     {
         $request = [
             'contact_id' => 1,
-            'happened_at' => Carbon::now(),
+            'happened_at' => now(),
         ];
 
         $this->expectException(ValidationException::class);
@@ -29,7 +29,8 @@ class AddMessageToConversationTest extends TestCase
         app(AddMessageToConversation::class)->execute($request);
     }
 
-    public function test_it_stores_a_message()
+    /** @test */
+    public function it_stores_a_message()
     {
         $conversation = factory(Conversation::class)->create([]);
 
@@ -38,7 +39,7 @@ class AddMessageToConversationTest extends TestCase
             'contact_id' => $conversation->contact->id,
             'conversation_id' => $conversation->id,
             'written_by_me' => true,
-            'written_at' => Carbon::now(),
+            'written_at' => now(),
             'content' => 'lorem ipsum',
         ];
 
@@ -59,16 +60,22 @@ class AddMessageToConversationTest extends TestCase
         );
     }
 
-    public function test_it_throws_an_exception_if_conversation_is_not_found()
+    /** @test */
+    public function it_throws_an_exception_if_contact_is_not_found()
     {
         $account = factory(Account::class)->create();
-        $contact = factory(Contact::class)->create();
+        $contact = factory(Contact::class)->create([
+            'account_id' => $account->id,
+        ]);
+        $conversation = factory(Conversation::class)->create([
+            'account_id' => $account->id,
+        ]);
         $request = [
-            'conversation_id' => 0,
+            'conversation_id' => $conversation->id,
             'contact_id' => $contact->id,
             'account_id' => $account->id,
             'written_by_me' => true,
-            'written_at' => Carbon::now(),
+            'written_at' => now(),
             'content' => 'lorem ipsum',
         ];
 
@@ -77,22 +84,22 @@ class AddMessageToConversationTest extends TestCase
         app(AddMessageToConversation::class)->execute($request);
     }
 
-    public function test_it_throws_an_exception_if_conversation_is_not_found2()
+    /** @test */
+    public function it_throws_an_exception_if_conversation_is_not_found2()
     {
         $account = factory(Account::class)->create();
         $contact = factory(Contact::class)->create([
             'account_id' => $account->id,
         ]);
-        $account2 = factory(Account::class)->create();
         $conversation = factory(Conversation::class)->create([
-            'account_id' => $account2->id,
+            'contact_id' => $contact->id,
         ]);
         $request = [
             'conversation_id' => $conversation->id,
             'contact_id' => $contact->id,
             'account_id' => $account->id,
             'written_by_me' => true,
-            'written_at' => Carbon::now(),
+            'written_at' => now(),
             'content' => 'lorem ipsum',
         ];
 

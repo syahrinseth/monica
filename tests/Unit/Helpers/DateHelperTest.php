@@ -45,6 +45,39 @@ class DateHelperTest extends FeatureTestCase
         );
     }
 
+    public function testGetFullDateWithEnglishLocale()
+    {
+        $date = '2017-01-22 17:56:03';
+        DateHelper::setLocale('en');
+
+        $this->assertEquals(
+            'January 22, 2017',
+            DateHelper::getFullDate($date)
+        );
+    }
+
+    public function testGetFullDateWithFrenchLocale()
+    {
+        $date = '2017-01-22 17:56:03';
+        DateHelper::setLocale('fr');
+
+        $this->assertEquals(
+            '22 janvier 2017',
+            DateHelper::getFullDate($date)
+        );
+    }
+
+    public function testGetFullDateWithUnknownLocale()
+    {
+        $date = '2017-01-22 17:56:03';
+        DateHelper::setLocale('jp');
+
+        $this->assertEquals(
+            'January 22, 2017',
+            DateHelper::getFullDate($date)
+        );
+    }
+
     public function testGetShortDateWithTimeWithEnglishLocale()
     {
         $date = '2017-01-22 17:56:03';
@@ -139,11 +172,33 @@ class DateHelperTest extends FeatureTestCase
 
     public function test_parse_dateTime()
     {
+        $testDate = DateHelper::parseDateTime(null);
+
+        $this->assertNull($testDate);
+
         $date = '2017-01-22 17:56:03';
 
         $testDate = DateHelper::parseDateTime($date);
 
         $this->assertInstanceOf(Carbon::class, $testDate);
+    }
+
+    public function test_parse_dateTime_bad()
+    {
+        $date = 'xF 2017';
+
+        $testDate = DateHelper::parseDateTime($date);
+
+        $this->assertNull($testDate);
+    }
+
+    public function test_parse_parseDate_bad()
+    {
+        $date = 'xF 2017';
+
+        $testDate = DateHelper::parseDate($date);
+
+        $this->assertNull($testDate);
     }
 
     public function test_parse_dateTime_format()

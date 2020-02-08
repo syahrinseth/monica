@@ -2,8 +2,10 @@
 
 namespace App\Services\Contact\Contact;
 
+use Illuminate\Support\Arr;
 use App\Services\BaseService;
 use App\Models\Contact\Contact;
+use App\Jobs\Avatars\GenerateDefaultAvatar;
 
 class UpdateContact extends BaseService
 {
@@ -21,7 +23,7 @@ class UpdateContact extends BaseService
             'middle_name' => 'nullable|string|max:255',
             'last_name' => 'nullable|string|max:255',
             'nickname' => 'nullable|string|max:255',
-            'gender_id' => 'required|integer|exists:genders,id',
+            'gender_id' => 'nullable|integer|exists:genders,id',
             'description' => 'nullable|string|max:255',
             'is_partial' => 'nullable|boolean',
             'is_birthdate_known' => 'required|boolean',
@@ -46,7 +48,7 @@ class UpdateContact extends BaseService
      * @param array $data
      * @return Contact
      */
-    public function execute(array $data) : Contact
+    public function execute(array $data): Contact
     {
         $this->validate($data);
 
@@ -58,8 +60,6 @@ class UpdateContact extends BaseService
         $this->updateBirthDayInformation($data, $contact);
 
         $this->updateDeceasedInformation($data, $contact);
-
-        $contact->updateGravatar();
 
         // we query the DB again to fill the object with all the new properties
         $contact->refresh();
@@ -77,7 +77,7 @@ class UpdateContact extends BaseService
     private function updateGeneralInformation(array $data, Contact $contact)
     {
         // filter out the data that shall not be updated here
-        $dataOnly = array_except(
+        $dataOnly = Arr::except(
             $data,
             [
                 'is_birthdate_known',
@@ -96,7 +96,14 @@ class UpdateContact extends BaseService
             ]
         );
 
+        $oldName = $contact->name;
+
         $contact->update($dataOnly);
+
+        // only update the avatar if the name has changed
+        if ($oldName != $contact->name) {
+            GenerateDefaultAvatar::dispatch($contact);
+        }
     }
 
     /**

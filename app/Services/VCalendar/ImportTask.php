@@ -6,6 +6,7 @@ use Ramsey\Uuid\Uuid;
 use App\Traits\DAVFormat;
 use Sabre\VObject\Reader;
 use App\Helpers\DateHelper;
+use Illuminate\Support\Arr;
 use App\Models\Contact\Task;
 use App\Services\BaseService;
 use Sabre\VObject\ParseException;
@@ -35,11 +36,11 @@ class ImportTask extends BaseService
      * @param array $data
      * @return array
      */
-    public function execute(array $data) : array
+    public function execute(array $data): array
     {
         $this->validate($data);
 
-        if (array_has($data, 'task_id') && ! is_null($data['task_id'])) {
+        if (Arr::has($data, 'task_id') && ! is_null($data['task_id'])) {
             $task = Task::where('account_id', $data['account_id'])
                 ->findOrFail($data['task_id']);
         } else {
@@ -56,7 +57,7 @@ class ImportTask extends BaseService
      * @param Task $task
      * @return array
      */
-    private function process(array $data, Task $task) : array
+    private function process(array $data, Task $task): array
     {
         $entry = $this->getEntry($data);
 
@@ -86,7 +87,7 @@ class ImportTask extends BaseService
      * @param VCalendar $entry
      * @return bool
      */
-    private function canImportCurrentEntry(VCalendar $entry) : bool
+    private function canImportCurrentEntry(VCalendar $entry): bool
     {
         return ! is_null($entry->VTODO);
     }

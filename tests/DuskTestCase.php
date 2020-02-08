@@ -5,6 +5,7 @@ namespace Tests;
 use Tests\Traits\SignIn;
 use Laravel\Dusk\Browser;
 use Laravel\Dusk\TestCase as BaseTestCase;
+use Facebook\WebDriver\Chrome\ChromeOptions;
 use Facebook\WebDriver\Remote\RemoteWebDriver;
 use Facebook\WebDriver\Remote\DesiredCapabilities;
 
@@ -20,33 +21,9 @@ abstract class DuskTestCase extends BaseTestCase
      */
     public static function prepare()
     {
-        static::useChromedriver(__DIR__.'/../vendor/bin/chromedriver');
         if (env('SAUCELABS') != '1') {
             static::startChromeDriver();
         }
-    }
-
-    /**
-     * Register the base URL and some macro with Dusk.
-     *
-     * @return void
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        /*
-         * Macro scrollTo to scroll down/up, until the selector is visible
-         */
-        Browser::macro('scrollTo', function ($selector) {
-            //$element = $this->element($selector);
-            //$this->driver->executeScript("arguments[0].scrollIntoView(true);",[$element]);
-
-            $selectorby = $this->resolver->format($selector);
-            $this->driver->executeScript("$(\"html, body\").animate({scrollTop: $(\"$selectorby\").offset().top}, 0);");
-
-            return $this;
-        });
     }
 
     /**
@@ -56,7 +33,11 @@ abstract class DuskTestCase extends BaseTestCase
      */
     protected function driver()
     {
-        $capabilities = DesiredCapabilities::chrome();
+        $options = (new ChromeOptions)->addArguments(explode(' ', env('CHROME_DRIVER_OPTS', '')));
+        $capabilities = DesiredCapabilities::chrome()->setCapability(
+            ChromeOptions::CAPABILITY, $options
+        );
+
         if (env('SAUCELABS') == '1') {
             $capabilities->setCapability('tunnel-identifier', env('TRAVIS_JOB_NUMBER'));
 

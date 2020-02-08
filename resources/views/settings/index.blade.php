@@ -8,7 +8,7 @@
   <div class="breadcrumb">
     <div class="{{ auth()->user()->getFluidLayout() }}">
       <div class="row">
-        <div class="col-xs-12">
+        <div class="col-12">
           <ul class="horizontal">
             <li>
               <a href="{{ route('dashboard.index') }}">{{ trans('app.breadcrumb_dashboard') }}</a>
@@ -27,20 +27,20 @@
 
       @include('settings._sidebar')
 
-      <div class="col-xs-12 col-md-9">
+      <div class="col-12 col-md-9">
         <div class="br3 ba b--gray-monica bg-white mb4">
           <div class="pa3 bb b--gray-monica">
 
             @include('partials.errors')
 
             @if (session('status'))
-              <div class="alert alert-success">
-                  {{ session('status') }}
-              </div>
+            <div class="alert alert-success">
+              {{ session('status') }}
+            </div>
             @endif
 
             <form action="{{ route('settings.save') }}" method="POST">
-              {{ csrf_field() }}
+              @csrf
 
               {{-- id --}}
               <input type="hidden" name="id" value="{{ auth()->user()->id }}" />
@@ -68,9 +68,15 @@
                 <label for="locale">{{ trans('settings.locale') }}</label>
                 <select class="form-control" name="locale" id="locale">
                   @foreach($locales as $locale)
-                    <option value="{{ $locale['lang'] }}" {{ (auth()->user()->locale == $locale['lang'])?'selected':'' }}>{{ $locale['name'] }}</option>
+                  <option value="{{ $locale['lang'] }}" {{ (auth()->user()->locale === $locale['lang'])?'selected':'' }}>
+                    {{ $locale['name-orig'] }}
+                    @if (auth()->user()->locale !== $locale['lang'] && $locale['name-orig'] !== $locale['name'])
+                    — {{ $locale['name'] }}
+                    @endif
+                  </option>
                   @endforeach
                 </select>
+                <small class="form-text text-muted">{!! trans('settings.locale_help', ['url' => 'https://github.com/monicahq/monica/blob/master/docs/contribute/translate.md']) !!}</small>
               </div>
 
               {{-- currency for user --}}
@@ -110,10 +116,11 @@
               {{-- Reminder --}}
               <div class="form-group">
                 <reminder-time
-                :reminder="'{{ auth()->user()->account->default_time_reminder_is_sent }}'"
-                :timezone="'{{ $selectedTimezone }}'"
-                :timezones="{{ json_encode($timezones) }}"
-                :hours="{{ json_encode($hours) }}">
+                  :reminder="'{{ auth()->user()->account->default_time_reminder_is_sent }}'"
+                  :timezone="'{{ $selectedTimezone }}'"
+                  :timezones="{{ \Safe\json_encode($timezones) }}"
+                  :hours="{{ \Safe\json_encode($hours) }}"
+                >
                 </reminder-time>
               </div>
 
@@ -123,7 +130,7 @@
         </div>
 
         <form method="POST" action="{{ route('settings.reset') }}" class="settings-reset bg-white" onsubmit="return confirm('{{ trans('settings.reset_notice') }}')">
-          {{ csrf_field() }}
+          @csrf
 
           <h2>{{ trans('settings.reset_title') }}</h2>
           <p>{{ trans('settings.reset_desc') }}</p>
@@ -131,10 +138,11 @@
         </form>
 
         <form method="POST" action="{{ route('settings.delete') }}" class="settings-delete bg-white" onsubmit="return confirm('{{ trans('settings.delete_notice') }}')">
-          {{ csrf_field() }}
+          @csrf
 
           <h2>{{ trans('settings.delete_title') }}</h2>
           <p>{{ trans('settings.delete_desc') }}</p>
+          <p>{{ trans('settings.delete_other_desc') }}</p>
           <button type="submit" class="btn">{{ trans('settings.delete_cta') }}</button>
         </form>
 

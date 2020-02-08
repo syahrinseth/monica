@@ -30,7 +30,7 @@ class ExportVCard extends BaseService
      * @param array $data
      * @return VCard
      */
-    public function execute(array $data) : VCard
+    public function execute(array $data): VCard
     {
         $this->validate($data);
 
@@ -40,7 +40,7 @@ class ExportVCard extends BaseService
         return $this->export($contact);
     }
 
-    private function escape($value) : string
+    private function escape($value): string
     {
         return ! empty((string) $value) ? trim((string) $value) : (string) null;
     }
@@ -49,7 +49,7 @@ class ExportVCard extends BaseService
      * @param Contact $contact
      * @return VCard
      */
-    private function export(Contact $contact) : VCard
+    private function export(Contact $contact): VCard
     {
         // The standard for most of these fields can be found on https://tools.ietf.org/html/rfc6350
         if (! $contact->uuid) {
@@ -73,6 +73,7 @@ class ExportVCard extends BaseService
         $this->exportAddress($contact, $vcard);
         $this->exportContactFields($contact, $vcard);
         $this->exportTimestamp($contact, $vcard);
+        $this->exportTags($contact, $vcard);
 
         return $vcard;
     }
@@ -102,18 +103,25 @@ class ExportVCard extends BaseService
      */
     private function exportGender(Contact $contact, VCard $vcard)
     {
-        switch ($contact->gender->name) {
-            case 'Man':
-                $gender = 'M';
-                break;
-            case 'Woman':
-                $gender = 'F';
-                break;
-            default:
-                $gender = 'O';
-                break;
+        if (is_null($contact->gender)) {
+            return;
         }
-        $vcard->add('GENDER', [$gender, $contact->gender->name]);
+
+        $gender = $contact->gender->type;
+        if (empty($gender)) {
+            switch ($contact->gender->name) {
+                case trans('app.gender_male'):
+                    $gender = Gender::MALE;
+                    break;
+                case trans('app.gender_female'):
+                    $gender = Gender::FEMALE;
+                    break;
+                default:
+                    $gender = Gender::OTHER;
+                    break;
+            }
+        }
+        $vcard->add('GENDER', $gender);
     }
 
     /**
@@ -123,7 +131,8 @@ class ExportVCard extends BaseService
     private function exportPhoto(Contact $contact, VCard $vcard)
     {
         $picture = $contact->getAvatarURL();
-        if (! is_null($picture)) {
+
+        if (! empty($picture)) {
             $vcard->add('PHOTO', $picture);
         }
     }
@@ -150,7 +159,11 @@ class ExportVCard extends BaseService
     private function exportBirthday(Contact $contact, VCard $vcard)
     {
         if (! is_null($contact->birthdate)) {
-            $date = $contact->birthdate->date->format('Ymd');
+            if ($contact->birthdate->is_year_unknown) {
+                $date = $contact->birthdate->date->format('--m-d');
+            } else {
+                $date = $contact->birthdate->date->format('Ymd');
+            }
             $vcard->add('BDAY', $date);
         }
     }
@@ -206,7 +219,7 @@ class ExportVCard extends BaseService
                     $vcard->add('socialProfile', $this->escape('http://t.me/'.$contactField->data), ['type' => 'telegram']);
                     break;
                 case 'LinkedIn':
-                    $vcard->add('socialProfile', $this->escape('http://www.linkedin.com/in/'.$contact->data), ['type' => 'linkedin']);
+                    $vcard->add('socialProfile', $this->escape('http://www.linkedin.com/in/'.$contactField->data), ['type' => 'linkedin']);
                     break;
                 default:
                     break;
@@ -221,5 +234,17 @@ class ExportVCard extends BaseService
     private function exportTimestamp(Contact $contact, VCard $vcard)
     {
         $vcard->REV = $contact->updated_at->format('Ymd\\THis\\Z');
+    }
+
+    /**
+     * @param Contact $contact
+     * @param VCard $vcard
+     */
+    private function exportTags(Contact $contact, VCard $vcard)
+    {
+        $tags = $contact->getTagsAsString();
+        if (! empty($tags)) {
+            $vcard->CATEGORIES = $tags;
+        }
     }
 }

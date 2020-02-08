@@ -3,6 +3,7 @@
 return [
 
     //index
+    'people_not_found' => 'Contact not found',
     'people_list_number_kids' => '1 dítě|:count děti',
     'people_list_last_updated' => 'Naposledy konzultováno:',
     'people_list_number_reminders' => '1 připomínka|:count připomínek',
@@ -22,7 +23,14 @@ return [
     'people_list_show_dead' => 'Show deceased people (:count)',
     'people_list_hide_dead' => 'Hide deceased people (:count)',
     'people_search' => 'Prohledat kontakty...',
-    'people_search_no_results' => 'Nebyly nalezeny žádné odpovídající kontakty :(',
+    'people_search_no_results' => 'No results found',
+    'people_search_next' => 'Next',
+    'people_search_prev' => 'Prev',
+    'people_search_rows_per_page' => 'Rows per page:',
+    'people_search_of' => 'of',
+    'people_search_page' => 'Page',
+    'people_search_all' => 'All',
+    'people_add_new' => 'Add new person',
     'people_list_account_usage' => 'Your account usage: :current/:limit contacts',
     'people_list_account_upgrade_title' => 'Upgrade your account to unlock it to its full potential.',
     'people_list_account_upgrade_cta' => 'Upgrade now',
@@ -62,6 +70,7 @@ return [
     'list_link_to_archived_contacts' => 'List of archived contacts',
 
     // Header
+    'me' => 'This is you',
     'edit_contact_information' => 'Upravit informace kontaktu',
     'contact_archive' => 'Archive contact',
     'contact_unarchive' => 'Unarchive contact',
@@ -76,7 +85,7 @@ return [
     'stay_in_touch_premium' => 'You need to upgrade your account to make use of this feature',
     'stay_in_touch_modal_title' => 'Stay in touch',
     'stay_in_touch_modal_desc' => 'We can remind you by email to keep in touch with {firstname} at a regular interval.',
-    'stay_in_touch_modal_label' => 'Send me an email every...',
+    'stay_in_touch_modal_label' => 'Send me an email every... {count} day|Send me an email every... {count} days',
 
     // Calls
     'modal_call_title' => 'Zaznamenat telefonát',
@@ -111,6 +120,7 @@ return [
     'conversation_add_content' => 'Write down what was said',
     'conversation_add_what_was_said' => 'What did you say?',
     'conversation_add_another' => 'Add another message',
+    'conversation_add_error' => 'You must add at least one message.',
     'conversation_list_table_messages' => 'Messages',
     'conversation_list_table_content' => 'Partial content (last message)',
     'conversation_list_title' => 'Conversations',
@@ -131,8 +141,8 @@ return [
     // additional information
     'information_edit_success' => 'Profil byl úspěšně aktualizován',
     'information_edit_title' => 'Upravit osobní informace o :name',
-    'information_edit_avatar' => 'Fotografie/avatar kontaktu',
     'information_edit_max_size' => 'Max :size Kb.',
+    'information_edit_max_size2' => 'Max {size} Kb.',
     'information_edit_firstname' => 'Jméno',
     'information_edit_lastname' => 'Příjmení (volitelné)',
     'information_edit_description' => 'Description (Optional)',
@@ -150,14 +160,14 @@ return [
     'work_edit_company' => 'Společnost (volitelné)',
     'work_information' => 'Work information',
 
-    // food preferencies
-    'food_preferencies_add_success' => 'Informace o oblíbených potravinách uloženy',
-    'food_preferencies_edit_description' => 'Možná má :firstname nebo někdo z rodiny :family alergii. Nebo nemusí nějaké specifické víno. Poznačte si to zde, abyste si vzpoměli před příštím pozváním na večeři',
-    'food_preferencies_edit_description_no_last_name' => 'Možná má :firstname alergii. Nebo nemusí nějaké specifické víno. Poznačte si to zde, abyste si vzpoměli před příštím pozváním na večeři',
-    'food_preferencies_edit_title' => 'Zapsat upřednostňované potraviny',
-    'food_preferencies_edit_cta' => 'Uložit informace o potravinách',
-    'food_preferencies_title' => 'Upřednostňované potraviny',
-    'food_preferencies_cta' => 'Přidat upřednostňované potraviny',
+    // food preferences
+    'food_preferences_add_success' => 'Informace o oblíbených potravinách uloženy',
+    'food_preferences_edit_description' => 'Možná má :firstname nebo někdo z rodiny :family alergii. Nebo nemusí nějaké specifické víno. Poznačte si to zde, abyste si vzpoměli před příštím pozváním na večeři',
+    'food_preferences_edit_description_no_last_name' => 'Možná má :firstname alergii. Nebo nemusí nějaké specifické víno. Poznačte si to zde, abyste si vzpoměli před příštím pozváním na večeři',
+    'food_preferences_edit_title' => 'Zapsat upřednostňované potraviny',
+    'food_preferences_edit_cta' => 'Uložit informace o potravinách',
+    'food_preferences_title' => 'Upřednostňované potraviny',
+    'food_preferences_cta' => 'Přidat upřednostňované potraviny',
 
     // reminders
     'reminders_blank_title' => 'Je něco na co chcete být upozorňováni pro osobu :name?',
@@ -174,6 +184,7 @@ return [
     'reminders_create_success' => 'Upozornění bylo úspěšně přidáno',
     'reminders_delete_success' => 'Upozornění bylo úspěšně smazáno',
     'reminders_update_success' => 'The reminder has been updated successfully',
+    'reminders_add_optional_comment' => 'Optional comment',
 
     'reminder_frequency_day' => 'every day|every :number days',
     'reminder_frequency_week' => 'každý týden|každé :number týdny',
@@ -196,6 +207,7 @@ return [
     'relationship_form_add' => 'Add a new relationship',
     'relationship_form_edit' => 'Edit an existing relationship',
     'relationship_form_is_with' => 'This person is...',
+    'relationship_form_is_with_name' => ':name is...',
     'relationship_form_add_choice' => 'Who is the relationship with?',
     'relationship_form_create_contact' => 'Add a new person',
     'relationship_form_associate_contact' => 'An existing contact',
@@ -210,6 +222,7 @@ return [
     'relationship_form_deletion_success' => 'The relationship has been deleted.',
 
     // tasks
+    'tasks_title' => 'Tasks',
     'tasks_blank_title' => 'You don’t have any tasks yet.',
     'tasks_form_title' => 'Title',
     'tasks_form_description' => 'Description (optional)',
@@ -230,24 +243,25 @@ return [
     'activity_type_ate_at_his_place' => 'ate at their place',
     'activity_type_went_bar' => 'návštěva baru',
     'activity_type_ate_at_home' => 'jídlo doma',
-    'activity_type_picknicked' => 'piknik',
+    'activity_type_picnicked' => 'picnicked',
     'activity_type_ate_restaurant' => 'jídlo v restauraci',
     'activity_type_went_theater' => 'návštěva divadla',
     'activity_type_went_concert' => 'návštěva koncertu',
     'activity_type_went_play' => 'návštěva zápasu',
     'activity_type_went_museum' => 'návštěva muzea',
     'activities_add_activity' => 'Přidat aktivitu',
-    'activities_more_details' => 'Více detailů',
-    'activities_hide_details' => 'Skrýt detaily',
-    'activities_delete_confirmation' => 'Opravdu chcete smazat tuto aktivitu?',
+    'activities_add_more_details' => 'Add more details',
+    'activities_add_emotions' => 'Add emotions',
+    'activities_add_category' => 'Indicate a category',
+    'activities_add_participants_cta' => 'Add participants',
     'activities_item_information' => ':Activity. Stalo se :date',
-    'activities_add_title' => 'Společná aktivita s :name?',
+    'activities_add_title' => 'What did you do with {name}?',
     'activities_summary' => 'Popište co jste dělali',
     'activities_add_pick_activity' => '(Optional) Would you like to categorize this activity? You don’t have to, but it will give you statistics later on',
-    'activities_add_date_occured' => 'Datum, kdy došlo k aktivitě',
-    'activities_add_optional_comment' => 'Volitelný komentář',
-    'activities_add_cta' => 'Zaznamenat aktivitu',
-    'activities_blank_title' => 'Keep track of what you’ve done with :name in the past, and what you’ve talked about',
+    'activities_add_date_occured' => 'The activity happened on...',
+    'activities_add_participants' => 'Who, apart from {name}, participated in this activity? (optional)',
+    'activities_add_emotions_title' => 'Do you want to log how you felt during this activity? (optional)',
+    'activities_blank_title' => 'Keep track of what you’ve done with {name} in the past, and what you’ve talked about',
     'activities_blank_add_activity' => 'Přidat aktivitu',
     'activities_add_success' => 'Aktivita byla úspěšně přidána',
     'activities_add_error' => 'Error when adding the activity',
@@ -261,6 +275,10 @@ return [
     'activities_profile_year_summary_activity_types' => 'Here is a breakdown of the type of activities you’ve done together in :year',
     'activities_profile_year_summary' => 'Here is what you two have done in :year',
     'activities_profile_number_occurences' => ':value activity|:value activities',
+    'activities_list_participants' => 'Participants:',
+    'activities_list_emotions' => 'Emotions felt:',
+    'activities_list_date' => 'Happened on',
+    'activities_list_category' => 'Category:',
 
     // notes
     'notes_create_success' => 'Poznámka byla úspěšně vytvořena',
@@ -367,7 +385,7 @@ return [
     // Pets
     'pets_kind' => 'Kind of pet',
     'pets_name' => 'Name (optional)',
-    'pets_create_success' => 'The pet has been sucessfully added',
+    'pets_create_success' => 'The pet has been successfully added',
     'pets_update_success' => 'The pet has been updated',
     'pets_delete_success' => 'The pet has been deleted',
     'pets_title' => 'Pets',
@@ -423,8 +441,8 @@ return [
     'life_event_sentence_home_improvement' => 'Made a home improvement',
     'life_event_sentence_holidays' => 'Went on holidays',
     'life_event_sentence_new_vehicle' => 'Got a new vehicle',
-    'life_event_sentence_new_roommate' => 'Got a roomate',
-    'life_event_sentence_overcame_an_illness' => 'Overcam an illness',
+    'life_event_sentence_new_roommate' => 'Got a roommate',
+    'life_event_sentence_overcame_an_illness' => 'Overcame an illness',
     'life_event_sentence_quit_a_habit' => 'Quit a habit',
     'life_event_sentence_new_eating_habits' => 'Started new eating habits',
     'life_event_sentence_weight_loss' => 'Lost weight',
@@ -454,11 +472,23 @@ return [
     'document_upload_zone_error' => 'There was an error uploading the document. Please try again below.',
 
     // Photos
+    'photo_title' => 'Photos',
     'photo_list_title' => 'Related photos',
     'photo_list_cta' => 'Upload photo',
     'photo_list_blank_desc' => 'You can store images about this contact. Upload one now!',
     'photo_upload_zone_cta' => 'Upload a photo',
+    'photo_current_profile_pic' => 'Current profile picture',
+    'photo_make_profile_pic' => 'Make profile picture',
     'photo_delete' => 'Delete photo',
+
+    // Avatars
+    'avatar_change_title' => 'Change your avatar',
+    'avatar_question' => 'Which avatar would you like to use?',
+    'avatar_default_avatar' => 'The default avatar',
+    'avatar_adorable_avatar' => 'The Adorable avatar',
+    'avatar_gravatar' => 'The Gravatar associated with the email address of this person. <a href="https://gravatar.com/">Gravatar</a> is a global system that lets users associate email addresses with photos.',
+    'avatar_current' => 'Keep the current avatar',
+    'avatar_photo' => 'From a photo that you upload',
 
     // emotions
     'emotion_this_made_me_feel' => 'This made you feel…',

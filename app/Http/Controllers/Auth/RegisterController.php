@@ -8,9 +8,8 @@ use App\Helpers\LocaleHelper;
 use App\Helpers\RequestHelper;
 use App\Jobs\SendNewUserAlert;
 use App\Models\Account\Account;
-use App\Helpers\CollectionHelper;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 
@@ -60,7 +59,7 @@ class RegisterController extends Controller
 
         return view('auth.register')
             ->withFirst($first)
-            ->withLocales(CollectionHelper::sortByCollator(LocaleHelper::getLocaleList(), 'lang'));
+            ->withLocales(LocaleHelper::getLocaleList()->sortByCollator('lang'));
     }
 
     /**
@@ -84,27 +83,37 @@ class RegisterController extends Controller
      * Create a new user instance after a valid registration.
      *
      * @param  array $data
-     * @return User
+     * @return User|null
      */
-    protected function create(array $data)
+    protected function create(array $data): ?User
     {
         $first = ! Account::hasAny();
-        $account = Account::createDefault(
-            $data['first_name'],
-            $data['last_name'],
-            $data['email'],
-            $data['password'],
-            RequestHelper::ip(),
-            $data['lang']
-        );
-        $user = $account->users()->first();
-
-        if (! $first) {
-            // send me an alert
-            dispatch(new SendNewUserAlert($user));
+        if (config('monica.disable_signup') == 'true' && ! $first) {
+            abort(403, trans('auth.signup_disabled'));
         }
 
-        return $user;
+        try {
+            $account = Account::createDefault(
+                $data['first_name'],
+                $data['last_name'],
+                $data['email'],
+                $data['password'],
+                RequestHelper::ip(),
+                $data['lang']
+            );
+            $user = $account->users()->first();
+
+            if (! $first) {
+                // send me an alert
+                dispatch(new SendNewUserAlert($user));
+            }
+
+            return $user;
+        } catch (\Exception $e) {
+            Log::warning($e);
+
+            return null;
+        }
     }
 
     /**
@@ -112,18 +121,18 @@ class RegisterController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  mixed  $user
-     * @return mixed
      */
     protected function registered(Request $request, $user)
     {
-        $first = Account::count() == 1;
-        if (! config('monica.signup_double_optin') || $first) {
+        if (is_null($user)) {
+            return $user;
+        }
+
+        /** @var int $count */
+        $count = Account::count();
+        if (! config('monica.signup_double_optin') || $count == 1) {
             // if signup_double_optin is disabled, skip the confirm email part
             $user->markEmailAsVerified();
-
-            $this->guard()->login($user);
-
-            return redirect()->route('login');
         }
     }
 }

@@ -23,13 +23,16 @@ class Contact extends Resource
             'first_name' => $this->first_name,
             'last_name' => $this->last_name,
             'nickname' => $this->nickname,
+            'complete_name' => $this->name,
             'description' => $this->description,
-            'gender' => $this->gender->name,
+            'gender' => is_null($this->gender) ? null : $this->gender->name,
+            'gender_type' => is_null($this->gender) ? null : $this->gender->type,
             'is_starred' => (bool) $this->is_starred,
             'is_partial' => (bool) $this->is_partial,
             'is_active' => (bool) $this->is_active,
             'is_dead' => (bool) $this->is_dead,
-            'last_called' => $this->when(! $this->is_partial, $this->getLastCalled()),
+            'is_me' => $this->isMe(),
+            'last_called' => $this->when(! $this->is_partial, $this->last_talked_to),
             'last_activity_together' => $this->when(! $this->is_partial, $this->getLastActivityDate()),
             'stay_in_touch_frequency' => $this->when(! $this->is_partial, $this->stay_in_touch_frequency),
             'stay_in_touch_trigger_date' => $this->when(! $this->is_partial, DateHelper::getTimestamp($this->stay_in_touch_trigger_date)),
@@ -69,11 +72,11 @@ class Contact extends Resource
                     'company' => $this->company,
                 ]),
                 'avatar' => $this->when(! $this->is_partial, [
-                    'url' => $this->getAvatarUrl(110),
-                    'source' => $this->getAvatarSource(),
+                    'url' => $this->getAvatarUrl(),
+                    'source' => $this->avatar_source,
                     'default_avatar_color' => $this->default_avatar_color,
                 ]),
-                'food_preferencies' => $this->when(! $this->is_partial, $this->food_preferencies),
+                'food_preferences' => $this->when(! $this->is_partial, $this->food_preferences),
                 'how_you_met' => $this->when(! $this->is_partial, [
                     'general_information' => $this->first_met_additional_info,
                     'first_met_date' => [
@@ -95,6 +98,7 @@ class Contact extends Resource
                 'number_of_gifts' => $this->gifts->count(),
                 'number_of_debts' => $this->debts->count(),
             ]),
+            'url' => $this->when(! $this->is_partial, route('api.contact', $this->id)),
             'account' => [
                 'id' => $this->account->id,
             ],
@@ -103,7 +107,7 @@ class Contact extends Resource
         ];
     }
 
-    private function getHashId()
+    protected function getHashId()
     {
         $hashid = '';
         if ($this->is_partial) {

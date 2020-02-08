@@ -87,13 +87,13 @@ class LifeEventsController extends Controller
         $data = [
             'account_id' => auth()->user()->account->id,
             'contact_id' => $contact->id,
-            'life_event_type_id' => $request->get('life_event_type_id'),
-            'happened_at' => $request->get('happened_at'),
-            'name' => $request->get('name'),
-            'note' => $request->get('note'),
-            'has_reminder' => $request->get('has_reminder'),
-            'happened_at_month_unknown' => $request->get('happened_at_month_unknown'),
-            'happened_at_day_unknown' => $request->get('happened_at_day_unknown'),
+            'life_event_type_id' => $request->input('life_event_type_id'),
+            'happened_at' => $request->input('happened_at'),
+            'name' => $request->input('name'),
+            'note' => $request->input('note'),
+            'has_reminder' => $request->input('has_reminder'),
+            'happened_at_month_unknown' => $request->input('happened_at_month_unknown'),
+            'happened_at_day_unknown' => $request->input('happened_at_day_unknown'),
         ];
 
         // create the conversation
@@ -126,7 +126,10 @@ class LifeEventsController extends Controller
         try {
             app(DestroyLifeEvent::class)->execute($data);
         } catch (\Exception $e) {
-            return back()
+            // We have to redirect with HTTP status 303 or the browser will issue a
+            // DELETE request to the new location. This may result in deleting other
+            // resources as well. Refer to Github issue #2415
+            return back(303)
                 ->withInput()
                 ->withErrors(trans('app.error_save'));
         }

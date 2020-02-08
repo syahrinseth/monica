@@ -2,7 +2,6 @@
 
 namespace Tests\Unit\Services\Contact\LifeEvent;
 
-use Carbon\Carbon;
 use Tests\TestCase;
 use App\Models\Account\Account;
 use App\Models\Contact\Contact;
@@ -17,7 +16,8 @@ class UpdateLifeEventTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function test_it_updates_a_life_event()
+    /** @test */
+    public function it_updates_a_life_event()
     {
         $lifeEvent = factory(LifeEvent::class)->create([
             'happened_at' => '2008-01-01',
@@ -53,13 +53,14 @@ class UpdateLifeEventTest extends TestCase
         );
     }
 
-    public function test_it_fails_if_wrong_parameters_are_given()
+    /** @test */
+    public function it_fails_if_wrong_parameters_are_given()
     {
         $contact = factory(Contact::class)->create([]);
 
         $request = [
             'contact_id' => $contact->id,
-            'happened_at' => Carbon::now(),
+            'happened_at' => now(),
         ];
 
         $this->expectException(ValidationException::class);
@@ -67,7 +68,8 @@ class UpdateLifeEventTest extends TestCase
         app(UpdateLifeEvent::class)->execute($request);
     }
 
-    public function test_it_throws_an_exception_if_life_type_doesnt_exist()
+    /** @test */
+    public function it_throws_an_exception_if_life_type_doesnt_exist()
     {
         $account = factory(Account::class)->create();
         $lifeEvent = factory(LifeEvent::class)->create([]);

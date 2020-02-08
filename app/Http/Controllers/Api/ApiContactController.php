@@ -5,29 +5,47 @@ namespace App\Http\Controllers\Api;
 use Illuminate\Http\Request;
 use App\Helpers\SearchHelper;
 use App\Models\Contact\Contact;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Illuminate\Database\QueryException;
+use App\Services\Contact\Contact\SetMeContact;
 use Illuminate\Validation\ValidationException;
 use App\Services\Contact\Contact\CreateContact;
 use App\Services\Contact\Contact\UpdateContact;
 use App\Services\Contact\Contact\DestroyContact;
+use Illuminate\Http\Resources\Json\JsonResource;
+use App\Services\Contact\Contact\UpdateContactWork;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Http\Resources\Contact\Contact as ContactResource;
+use App\Services\Contact\Contact\UpdateContactIntroduction;
+use App\Services\Contact\Contact\UpdateContactFoodPreferences;
 use App\Http\Resources\Contact\ContactWithContactFields as ContactWithContactFieldsResource;
 
 class ApiContactController extends ApiController
 {
     /**
+     * Instantiate a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('limitations')->only('setMe');
+        parent::__construct();
+    }
+
+    /**
      * Get the list of the contacts.
      * We will only retrieve the contacts that are "real", not the partials
      * ones.
      *
-     * @return \Illuminate\Http\Resources\Json\JsonResource|\Illuminate\Http\JsonResponse
+     * @param Request $request
+     * @return JsonResource|JsonResponse
      */
     public function index(Request $request)
     {
-        if ($request->get('query')) {
-            $needle = rawurldecode($request->get('query'));
+        if ($request->input('query')) {
+            $needle = rawurldecode($request->input('query'));
 
             try {
                 $contacts = SearchHelper::searchContacts(
@@ -65,10 +83,10 @@ class ApiContactController extends ApiController
      * Get the detail of a given contact.
      *
      * @param Request $request
-     *
-     * @return ContactResource|\Illuminate\Http\JsonResponse|ContactWithContactFieldsResource
+     * @param int $id
+     * @return ContactResource|JsonResponse|ContactWithContactFieldsResource
      */
-    public function show(Request $request, $id)
+    public function show(Request $request, int $id)
     {
         try {
             $contact = Contact::where('account_id', auth()->user()->account_id)
@@ -92,17 +110,17 @@ class ApiContactController extends ApiController
      *
      * @param Request $request
      *
-     * @return ContactResource|\Illuminate\Http\JsonResponse
+     * @return ContactResource|JsonResponse
      */
     public function store(Request $request)
     {
         try {
             $contact = app(CreateContact::class)->execute(
-                $request->all()
+                $request->except(['account_id'])
                     +
                     [
-                    'account_id' => auth()->user()->account->id,
-                ]
+                        'account_id' => auth()->user()->account->id,
+                    ]
             );
         } catch (ModelNotFoundException $e) {
             return $this->respondNotFound();
@@ -120,18 +138,18 @@ class ApiContactController extends ApiController
      *
      * @param Request $request
      *
-     * @return ContactResource|\Illuminate\Http\JsonResponse
+     * @return ContactResource|JsonResponse
      */
     public function update(Request $request, $contactId)
     {
         try {
             $contact = app(UpdateContact::class)->execute(
-                $request->all()
+                $request->except(['account_id', 'contact_id'])
                     +
                     [
-                    'contact_id' => $contactId,
-                    'account_id' => auth()->user()->account->id,
-                ]
+                        'contact_id' => $contactId,
+                        'account_id' => auth()->user()->account->id,
+                    ]
             );
         } catch (ModelNotFoundException $e) {
             return $this->respondNotFound();
@@ -149,7 +167,7 @@ class ApiContactController extends ApiController
      *
      * @param Request $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function destroy(Request $request, $contactId)
     {
@@ -165,7 +183,7 @@ class ApiContactController extends ApiController
     /**
      * Apply the `?with=` parameter.
      * @param  Collection $contacts
-     * @return \Illuminate\Http\Resources\Json\JsonResource
+     * @return JsonResource
      */
     private function applyWithParameter($contacts, string $parameter = null)
     {
@@ -174,5 +192,113 @@ class ApiContactController extends ApiController
         }
 
         return ContactResource::collection($contacts);
+    }
+
+    /**
+     * Set a contact as 'me'.
+     *
+     * @param Request $request
+     * @param int $contactId
+     *
+     * @return string
+     */
+    public function setMe(Request $request, $contactId)
+    {
+        $data = [
+            'contact_id' => $contactId,
+            'account_id' => auth()->user()->account->id,
+            'user_id' => auth()->user()->id,
+        ];
+
+        app(SetMeContact::class)->execute($data);
+
+        return $this->respond(['true']);
+    }
+
+    /**
+     * Set the contact career.
+     *
+     * @param Request $request
+     * @param int $contactId
+     *
+     * @return ContactResource|JsonResponse
+     */
+    public function updateWork(Request $request, $contactId)
+    {
+        try {
+            $contact = app(UpdateContactWork::class)->execute(
+                $request->except(['account_id', 'contact_id'])
+                + [
+                    'contact_id' => $contactId,
+                    'account_id' => auth()->user()->account->id,
+                ]
+            );
+        } catch (ModelNotFoundException $e) {
+            return $this->respondNotFound();
+        } catch (ValidationException $e) {
+            return $this->respondValidatorFailed($e->validator);
+        } catch (QueryException $e) {
+            return $this->respondInvalidQuery();
+        }
+
+        return new ContactResource($contact);
+    }
+
+    /**
+     * Set the contact food preferences.
+     *
+     * @param Request $request
+     * @param int $contactId
+     *
+     * @return ContactResource|JsonResponse
+     */
+    public function updateFoodPreferences(Request $request, $contactId)
+    {
+        try {
+            $contact = app(UpdateContactFoodPreferences::class)->execute(
+                $request->except(['account_id', 'contact_id'])
+                + [
+                    'contact_id' => $contactId,
+                    'account_id' => auth()->user()->account->id,
+                ]
+            );
+        } catch (ModelNotFoundException $e) {
+            return $this->respondNotFound();
+        } catch (ValidationException $e) {
+            return $this->respondValidatorFailed($e->validator);
+        } catch (QueryException $e) {
+            return $this->respondInvalidQuery();
+        }
+
+        return new ContactResource($contact);
+    }
+
+    /**
+     * Set how you met the contact.
+     *
+     * @param Request $request
+     * @param int $contactId
+     *
+     * @return ContactResource|JsonResponse
+     */
+    public function updateIntroduction(Request $request, $contactId)
+    {
+        try {
+            $contact = app(UpdateContactIntroduction::class)->execute(
+                $request->except(['account_id', 'contact_id'])
+                + [
+                    'contact_id' => $contactId,
+                    'account_id' => auth()->user()->account->id,
+                ]
+            );
+        } catch (ModelNotFoundException $e) {
+            return $this->respondNotFound();
+        } catch (ValidationException $e) {
+            return $this->respondValidatorFailed($e->validator);
+        } catch (QueryException $e) {
+            return $this->respondInvalidQuery();
+        }
+
+        return new ContactResource($contact);
     }
 }

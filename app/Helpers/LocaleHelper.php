@@ -2,7 +2,11 @@
 
 namespace App\Helpers;
 
+use Illuminate\Support\Arr;
 use Matriphe\ISO639\ISO639;
+use function Safe\preg_match;
+use function Safe\preg_split;
+use Illuminate\Support\Facades\App;
 use libphonenumber\PhoneNumberUtil;
 use Illuminate\Support\Facades\Auth;
 use libphonenumber\PhoneNumberFormat;
@@ -36,7 +40,7 @@ class LocaleHelper
     public static function getLang($locale = null)
     {
         if (is_null($locale)) {
-            $locale = self::getLocale();
+            $locale = App::getLocale();
         }
         if (preg_match(self::LANG_SPLIT, $locale)) {
             $locale = preg_split(self::LANG_SPLIT, $locale, 2)[0];
@@ -71,7 +75,7 @@ class LocaleHelper
     public static function extractCountry($locale = null)
     {
         if (is_null($locale)) {
-            $locale = self::getLocale();
+            $locale = App::getLocale();
         }
         if (preg_match(self::LANG_SPLIT, $locale)) {
             $locale = preg_split(self::LANG_SPLIT, $locale, 2)[1];
@@ -87,20 +91,32 @@ class LocaleHelper
      */
     public static function getLocaleList()
     {
-        $locales = collect([]);
-        foreach (config('lang-detector.languages') as $lang) {
-            $name = trans('settings.locale_'.$lang);
-            if ($name == 'settings.locale_'.$lang) {
-                // The name of the new language is not already set, even in english
-                $name = $lang;
-            }
-            $locales->push([
+        return collect(config('lang-detector.languages'))->map(function ($lang) {
+            return [
                 'lang' => $lang,
-                'name' => $name,
-            ]);
+                'name' => self::getLocaleName($lang),
+                'name-orig' => self::getLocaleName($lang, $lang),
+            ];
+        });
+    }
+
+    /**
+     * Get the name of one language.
+     *
+     * @param string $lang
+     * @param string $locale
+     *
+     * @return string
+     */
+    private static function getLocaleName($lang, $locale = null): string
+    {
+        $name = trans('settings.locale_'.$lang, [], $locale);
+        if ($name == 'settings.locale_'.$lang) {
+            // The name of the new language is not already set, even in english
+            $name = $lang;
         }
 
-        return CollectionHelper::sortByCollator($locales, 'name');
+        return $name;
     }
 
     /**
@@ -144,8 +160,8 @@ class LocaleHelper
      */
     public static function getLocaleAlpha($locale)
     {
-        if (array_has(static::$locales, $locale)) {
-            return array_get(static::$locales, $locale);
+        if (Arr::has(static::$locales, $locale)) {
+            return Arr::get(static::$locales, $locale);
         }
         $locale = mb_strtolower($locale);
         $languages = (new ISO639)->allLanguages();
@@ -169,7 +185,7 @@ class LocaleHelper
      * @param int $format
      * @return string
      */
-    public static function formatTelephoneNumberByISO(string $tel, $iso, int $format = PhoneNumberFormat::INTERNATIONAL) : string
+    public static function formatTelephoneNumberByISO(string $tel, $iso, int $format = PhoneNumberFormat::INTERNATIONAL): string
     {
         if (empty($iso)) {
             return $tel;

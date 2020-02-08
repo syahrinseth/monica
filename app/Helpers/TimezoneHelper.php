@@ -3,6 +3,8 @@
 namespace App\Helpers;
 
 use DateTimeZone;
+use function Safe\substr;
+use Illuminate\Support\Arr;
 
 class TimezoneHelper
 {
@@ -11,13 +13,13 @@ class TimezoneHelper
      *
      * @return array
      */
-    public static function getListOfTimezones() : array
+    public static function getListOfTimezones(): array
     {
         $list = [];
         $timezones = DateTimeZone::listIdentifiers();
 
         foreach ($timezones as $timezone) {
-            list($tz, $name) = self::formatTimezone($timezone);
+            [$tz, $name] = self::formatTimezone($timezone);
             array_push($list, [
                 'id' => $tz,
                 'timezone' => $timezone,
@@ -31,7 +33,7 @@ class TimezoneHelper
 
         $result = [];
         foreach ($collect as $item) {
-            $values = array_values(array_sort($item, function ($value) {
+            $values = array_values(Arr::sort($item, function ($value) {
                 return $value['name'];
             }));
             foreach ($values as $val) {
@@ -48,7 +50,7 @@ class TimezoneHelper
      * @param string $timezone
      * @return array int value of the offset, string formatted timezone
      */
-    private static function formatTimezone($timezone) : array
+    private static function formatTimezone($timezone): array
     {
         $dtimezone = new DateTimeZone($timezone);
         $time = now($timezone);
@@ -111,7 +113,7 @@ class TimezoneHelper
      * @param string $timezone
      * @return string
      */
-    public static function adjustEquivalentTimezone($timezone) : string
+    public static function adjustEquivalentTimezone($timezone): string
     {
         if (array_key_exists($timezone, self::$equivalentTimezone)) {
             return self::$equivalentTimezone[$timezone];

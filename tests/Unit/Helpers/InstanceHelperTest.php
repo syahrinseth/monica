@@ -3,6 +3,7 @@
 namespace Tests\Unit\Helpers;
 
 use Tests\TestCase;
+use function Safe\json_decode;
 use App\Helpers\InstanceHelper;
 use App\Models\Account\Account;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
@@ -11,7 +12,8 @@ class InstanceHelperTest extends TestCase
 {
     use DatabaseTransactions;
 
-    public function test_it_gets_the_number_of_paid_subscribers()
+    /** @test */
+    public function it_gets_the_number_of_paid_subscribers()
     {
         $account = factory(Account::class)->create(['stripe_id' => 'id292839']);
         $account = factory(Account::class)->create();
@@ -23,7 +25,8 @@ class InstanceHelperTest extends TestCase
         );
     }
 
-    public function test_it_fetches_the_monthly_plan_information()
+    /** @test */
+    public function it_fetches_the_monthly_plan_information()
     {
         config(['monica.paid_plan_monthly_friendly_name' => 'Monthly']);
         config(['monica.paid_plan_monthly_id' => 'monthly']);
@@ -50,12 +53,13 @@ class InstanceHelperTest extends TestCase
         );
 
         $this->assertEquals(
-            10,
+            '$10.00',
             InstanceHelper::getPlanInformationFromConfig('monthly')['friendlyPrice']
         );
     }
 
-    public function test_it_fetches_the_annually_plan_information()
+    /** @test */
+    public function it_fetches_the_annually_plan_information()
     {
         config(['monica.paid_plan_annual_friendly_name' => 'Annual']);
         config(['monica.paid_plan_annual_id' => 'annual']);
@@ -82,12 +86,13 @@ class InstanceHelperTest extends TestCase
         );
 
         $this->assertEquals(
-            10,
+            '$10.00',
             InstanceHelper::getPlanInformationFromConfig('annual')['friendlyPrice']
         );
     }
 
-    public function test_it_returns_null_when_fetching_an_unknown_plan_information()
+    /** @test */
+    public function it_returns_null_when_fetching_an_unknown_plan_information()
     {
         $account = new Account;
 
@@ -96,7 +101,8 @@ class InstanceHelperTest extends TestCase
         );
     }
 
-    public function test_it_gets_latest_changelog_entries()
+    /** @test */
+    public function it_gets_latest_changelog_entries()
     {
         $json = public_path('changelog.json');
         $changelogs = json_decode(file_get_contents($json), true)['entries'];

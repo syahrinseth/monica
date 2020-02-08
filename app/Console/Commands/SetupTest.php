@@ -13,7 +13,7 @@ class SetupTest extends Command
      * @var string
      */
     protected $signature = 'setup:test
-                            {--skipSeed : Whether we should populate the database with fake data}';
+                            {--skipSeed : Skip the populate database with fake data.}';
 
     /**
      * The console command description.
@@ -49,7 +49,7 @@ class SetupTest extends Command
         $this->line('-----------------------------');
         $this->info('| You can now sign in to your account:');
         $this->line('| username: admin@admin.com');
-        $this->line('| password: admin');
+        $this->line('| password: admin0');
         $this->line('| URL:      '.config('app.url'));
         $this->line('-----------------------------');
 
